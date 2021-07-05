@@ -7,7 +7,8 @@ fi
 ### VARAIBLES ###
 read -p "User spigot password:" SPIGOT_USR_PASS
 read -p "MySQL Database Password:" MYSQL_DATABASE_PASS
-read -p "Old SSH Port:" SHH_PORT_OLD
+# read -p "Old SSH Port:" SHH_PORT_OLD
+SHH_PORT_OLD=22
 read -p "New SSH Port:" SSH_PORT_NEW
 #read -p "Minecraft server version:" SERVER_VERSION
 SERVER_VERSION=1.17
