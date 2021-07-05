@@ -20,10 +20,10 @@ useradd spigot
 
 # Install Java
 add-apt-repository ppa:linuxuprising/java
-apt update
+apt update -y
 apt install -y oracle-java16-installer
 add-apt-repository --remove ppa:linuxuprising/java
-apt-get remove oracle-java16-installer
+apt-get remove -y oracle-java16-installer
 
 # Clone Repository
 cd /home/spigot
@@ -31,7 +31,7 @@ git clone https://github.com/supergnaw/Full-Stack-Minecraft
 
 # BuildTools
 mkdir -p /home/spigot/buildtools
-wget -O /home/spigot/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
+wget -O /home/spigot/buildtools/BuildTools.jar https://hub.spigotmc.org/jenkins/job/BuildTools/lastSuccessfulBuild/artifact/target/BuildTools.jar
 git config --global --unset core.autocrlf
 cd /home/spigot/buildtools
 java -jar BuildTools.jar --rev ${SERVER_VERSION}
