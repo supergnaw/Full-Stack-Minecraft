@@ -9,9 +9,9 @@ read -p "User spigot password:" SPIGOT_USR_PASS
 read -p "MySQL Database Password:" MYSQL_DATABASE_PASS
 read -p "Old SSH Port:" SHH_PORT_OLD
 read -p "New SSH Port:" SSH_PORT_NEW
-read -p "Minecraft server version:" SSH_PORT_NEW
-read -p "Web domain for server (without www.):" WEB_DOMAIN
+#read -p "Minecraft server version:" SERVER_VERSION
 SERVER_VERSION=1.17
+read -p "Web domain for server (without www.):" WEB_DOMAIN
 
 # Add user for server
 useradd spigot
