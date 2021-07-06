@@ -46,6 +46,7 @@ wget -O /home/spigot/server/plugins/floodgate-spigot.jar https://ci.opencollab.d
 
 # Scripts directory
 mkdir -p /home/spigot/scripts
+cp /home/spigot/Full-Stack-Minecraft/scripts /home/spigot/scripts
 
 # Backup direcctories
 mkdir -p /home/spigot/backups/live
@@ -104,7 +105,7 @@ mysql -u root -p"${MYSQL_DATABASE_PASS}" -e "FLUSH PRIVILEGES"
 # SSH
 cd /home/spigot
 apt install -y openssh-server
-sed "s/#Port 22/Port ${SSH_PORT_NEW}/gIm" /etc/ssh/sshd_config
+sed "s/#?Port \d+/Port ${SSH_PORT_NEW}/gIm" /etc/ssh/sshd_config
 systemctl restart sshd
 mkdir -p /home/spigot/.ssh
 touch /home/spigot/.ssh/authorized_keys
