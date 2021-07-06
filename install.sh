@@ -68,6 +68,7 @@ bash /home/spigot/scripts/cronjobs.sh
 # Web Server
 apt install -y apache2
 systemctl enable apache2
+systemctl restart apache2
 touch /etc/apache2/sites-available/${WEB_DOMAIN}.conf
 echo "<VirtualHost *:80>" > /etc/apache2/sites-available/${WEB_DOMAIN}.conf
 echo "    ServerName ${WEB_DOMAIN}" >> /etc/apache2/sites-available/${WEB_DOMAIN}.conf
@@ -85,7 +86,8 @@ echo "    CustomLog ${APACHE_LOG_DIR}/${WEB_DOMAIN}-access.log combined" >> /etc
 echo "</VirtualHost>" >> /etc/apache2/sites-available/${WEB_DOMAIN}.conf
 mkdir -p /var/www/${WEB_DOMAIN}/public_html
 ln -s /home/spigot/overviewer/output /var/www/${WEB_DOMAIN}/public_html/map
-systemctl restart apache2
+a2ensite ${WEB_DOMAIN}.conf
+systemctl reload apache2
 # systemctl reload apache2 # use to reload configs without dropping connections
 
 # MySQL Database
