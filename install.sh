@@ -16,7 +16,7 @@ read -p "Web domain for server (without www.):" WEB_DOMAIN
 
 # Add user for server
 useradd spigot
-# echo spigot:${SPIGOT_USR_PASS} | chpasswd
+echo "spigot:${SPIGOT_USR_PASS}" | chpasswd
 
 # Install Java
 add-apt-repository ppa:linuxuprising/java
