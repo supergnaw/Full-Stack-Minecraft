@@ -15,15 +15,13 @@ SERVER_VERSION=1.17
 read -p "Web domain for server (without www.):" WEB_DOMAIN
 
 # Add user for server
-useradd spigot
+useradd -m -s /bin/bash spigot
 echo "spigot:${SPIGOT_USR_PASS}" | chpasswd
 
 # Install Java
 add-apt-repository ppa:linuxuprising/java
 apt update -y
-apt install -y oracle-java16-installer
-add-apt-repository --remove ppa:linuxuprising/java
-apt-get remove -y oracle-java16-installer
+apt install -y openjdk-16-jre-headless
 
 # Clone Repository
 cd /home/spigot
@@ -41,7 +39,7 @@ mkdir -p /home/spigot/server/plugins
 cp /home/spigot/buildtools/spigot-${SERVER_VERSION}.jar /home/spigot/server
 touch /home/spigot/server/eula.txt
 echo eula=true > /home/spigot/server/eula.txt
-wget -O /home/spigot/server/plugins/Geyser-Spigot.jar https://ci.opencollab.dev//job/GeyserMC/job/Geyser/job/master/lastSuccessfulBuild/artifact/bootstrap/spigot/target/Geyser-Spigot.jar
+wget -O /home/spigot/server/plugins/Geyser-Spigot.jar https://ci.opencollab.dev/job/GeyserMC/job/Geyser/job/master/lastSuccessfulBuild/artifact/bootstrap/spigot/target/Geyser-Spigot.jar
 wget -O /home/spigot/server/plugins/floodgate-spigot.jar https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/lastSuccessfulBuild/artifact/spigot/target/floodgate-spigot.jar
 
 # Scripts directory
@@ -51,14 +49,18 @@ cp /home/spigot/Full-Stack-Minecraft/scripts /home/spigot/scripts
 # Backup direcctories
 mkdir -p /home/spigot/backups/live
 
-# Overviewer
+# Install Python
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:deadsnakes/ppa
+apt-get update -y
+apt-get install -y python3-pil python3-dev python3-numpy
+
+# Install Overviewer
 mkdir -p /home/spigot/overviewer/output
-cd /home/spigot/overviewer
-echo "deb https://overviewer.org/debian ./" >> /etc/apt/sources.list
-wget -O - https://overviewer.org/debian/overviewer.gpg.asc | apt-key add -
-apt-get update
-apt-get install minecraft-overviewer
-# /var/www/${WEB_DOMAIN}/public_html
+mkdir -p /home/spigot/overviewer/versions
+cd /home/spigot/overviewer/versions
+wget -O ${SERVER_VERSION}.jar https://overviewer.org/textures/${SERVER_VERSION}
+bash /home/spigot/scripts/overviewer_build.sh
 
 # Cron Jobs
 apt install -y cron
@@ -105,7 +107,7 @@ mysql -u root -p"${MYSQL_DATABASE_PASS}" -e "FLUSH PRIVILEGES"
 # SSH
 cd /home/spigot
 apt install -y openssh-server
-sed "s/#?Port \d+/Port ${SSH_PORT_NEW}/gIm" /etc/ssh/sshd_config
+sed "s/#\?Port [0-9]\+/Port ${SSH_PORT_NEW}/gIm" /etc/ssh/sshd_config
 systemctl restart sshd
 mkdir -p /home/spigot/.ssh
 touch /home/spigot/.ssh/authorized_keys
