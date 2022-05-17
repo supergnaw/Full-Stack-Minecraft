@@ -51,7 +51,6 @@ mkdir -p /home/spigot/backups/live
 
 # Install Python
 apt-get install -y software-properties-common
-add-apt-repository -y ppa:deadsnakes/ppa
 apt-get update -y
 apt-get install -y python3-pil python3-dev python3-numpy
 
