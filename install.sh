@@ -7,21 +7,24 @@ fi
 ### VARAIBLES ###
 read -p "User spigot password:" SPIGOT_USR_PASS
 read -p "MySQL Database Password:" MYSQL_DATABASE_PASS
-# read -p "Old SSH Port:" SHH_PORT_OLD
-SHH_PORT_OLD=22
+read -p "Old SSH Port:" SHH_PORT_OLD
+SHH_PORT_OLD=${SHH_PORT_OLD:-22}
 read -p "New SSH Port:" SSH_PORT_NEW
-#read -p "Minecraft server version:" SERVER_VERSION
-SERVER_VERSION=1.17
+read -p "Minecraft server version:" SERVER_VERSION
+SERVER_VERSION=${SERVER_VERSION:-1.18}
 read -p "Web domain for server (without www.):" WEB_DOMAIN
 
 # Add user for server
 useradd -m -s /bin/bash spigot
 echo "spigot:${SPIGOT_USR_PASS}" | chpasswd
 
-# Install Java
-add-apt-repository ppa:linuxuprising/java
+# Update apt and install screen
 apt update -y
-apt install -y openjdk-16-jre-headless
+apt install -y screen
+
+
+# Install Java
+apt install -y openjdk-17-jre-headless
 
 # Clone Repository
 cd /home/spigot
@@ -38,15 +41,15 @@ java -jar BuildTools.jar --rev ${SERVER_VERSION}
 mkdir -p /home/spigot/server/plugins
 cp /home/spigot/buildtools/spigot-${SERVER_VERSION}.jar /home/spigot/server
 touch /home/spigot/server/eula.txt
-echo eula=true > /home/spigot/server/eula.txt
+echo eula=true | tee /home/spigot/server/eula.txt
 wget -O /home/spigot/server/plugins/Geyser-Spigot.jar https://ci.opencollab.dev/job/GeyserMC/job/Geyser/job/master/lastSuccessfulBuild/artifact/bootstrap/spigot/target/Geyser-Spigot.jar
 wget -O /home/spigot/server/plugins/floodgate-spigot.jar https://ci.opencollab.dev/job/GeyserMC/job/Floodgate/job/master/lastSuccessfulBuild/artifact/spigot/target/floodgate-spigot.jar
 
 # Scripts directory
 mkdir -p /home/spigot/scripts
-cp /home/spigot/Full-Stack-Minecraft/scripts /home/spigot/scripts
+cp -r /home/spigot/Full-Stack-Minecraft/scripts /home/spigot/
 
-# Backup direcctories
+# Backup directories
 mkdir -p /home/spigot/backups/live
 
 # Install Python
@@ -55,11 +58,14 @@ apt-get update -y
 apt-get install -y python3-pil python3-dev python3-numpy
 
 # Install Overviewer
+apt-get install -y build-essential
+git clone https://github.com/overviewer/Minecraft-Overviewer.git /opt/Minecraft-Overviewer
+cd /opt/Minecraft-Overviewer
+python3 setup.py build
 mkdir -p /home/spigot/overviewer/output
 mkdir -p /home/spigot/overviewer/versions
 cd /home/spigot/overviewer/versions
 wget -O ${SERVER_VERSION}.jar https://overviewer.org/textures/${SERVER_VERSION}
-bash /home/spigot/scripts/overviewer_build.sh
 
 # Cron Jobs
 apt install -y cron
@@ -106,19 +112,20 @@ mysql -u root -p"${MYSQL_DATABASE_PASS}" -e "FLUSH PRIVILEGES"
 # SSH
 cd /home/spigot
 apt install -y openssh-server
-sed "s/#\?Port [0-9]\+/Port ${SSH_PORT_NEW}/gIm" /etc/ssh/sshd_config
+cp /etc/ssh/sshd_config sshd_config.bak
+sed -i -r "s|^\#?Port ${SSH_PORT_OLD}[^\d]*|Port ${SSH_PORT_NEW}|gim" sshd_config
 systemctl restart sshd
 mkdir -p /home/spigot/.ssh
 touch /home/spigot/.ssh/authorized_keys
 ssh-keygen -t rsa -f /home/spigot/.ssh/id_rsa
-cat /home/spigot/.ssh/id_rsa.pub >> /home/spigot/.ssh/authorized_keys
+cat /home/spigot/.ssh/id_rsa.pub | tee -a /home/spigot/.ssh/authorized_keys
 chmod 600 /home/spigot/.ssh/authorized_keys
 chmod 700 /home/spigot/.ssh
 
-# Ownership
+# Ownership of spigot user directory
 chown -R spigot:spigot /home/spigot/
 
-# Firewall Rules
+# Firewall Rules IPv4
 iptables --flush INPUT
 iptables --flush FORWARD
 iptables --flush OUTPUT
