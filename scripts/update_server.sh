@@ -1,5 +1,5 @@
 # Variable
-REVISION=1.17
+REVISION=1.18
 
 # Notify server of new download
 bash /home/spigot/scripts/shutdown_now.sh
