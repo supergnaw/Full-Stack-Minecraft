@@ -1,5 +1,6 @@
 # Alert users performance may be impacted
 if screen -ls | grep -Pq "[\d]+\.spigot"; then
+    # Adding test line for automatic updating script comparing repository changes
     screen -S spigot -X stuff "say New map rendering, server may experience slower performance until it is complete.^M"
 fi
 
