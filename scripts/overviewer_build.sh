@@ -32,14 +32,12 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 	SCRIPTPATH=`cd -- "$( dirname "$0" )" >/dev/null 2>&1 ; pwd -P`
 	touch /var/spool/cron/crontabs/overviewer
 	echo "0 5 * * 1 bash ${SCRIPTPATH}/overviewer_build.sh" | tee -a /var/spool/cron/crontabs/overviewer
-	echo "0/1 * * * * date | tee -a /var/log/overviewer/test.txt" | tee -a /var/spool/cron/crontabs/overviewer
 	chmod 600 /var/spool/cron/crontabs/overviewer
 	chown overviewer:crontab /var/spool/cron/crontabs/overviewer
 	# Create log directory and associated logs
 	if [ ! -d "/var/log/overviewer" ]; then
 		mkdir /var/log/overviewer
 	fi
-	touch /var/log/overviewer/test.txt
 	touch /var/log/overviewer/update.log
 	touch /var/log/overviewer/rebuild.log
 	chown -R overviewer:overviewer /var/log/overviewer
