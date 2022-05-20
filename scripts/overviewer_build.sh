@@ -5,23 +5,17 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 		echo "Please run this script as root or using sudo for the initial install"
 		exit
 	fi
-	# Add overviewer user
-	if [ ! $@ ]; then
-		echo "no password provided"
-	else
-		echo "password provided: ${1}"
-	fi
-	if [ ! ${1} ]; then
-		echo "no password provided"
-	else
-		echo "password provided: ${1}"
-	fi
-	exit
+	# Check for overviewer user
 	if [ 0 == `getent passwd overviewer | wc -l` ]; then
+		# Check if overviewer password was provided
+		if [ ! ${1} ]; then
+			echo "Please provide a password for the user: overviewer"
+			exit
+		fi
+		# Add overviewer user
 		useradd -m -s /bin/bash overviewer
-		# Generate a random base64 password based on the answer to life, the universe, and everything
-		PASSWORD="$(openssl rand -base64 42)"
-		echo "overviewer:${PASSWORD}" | chpasswd
+		# Set overviewer password
+		echo "overviewer:${1}" | chpasswd
 	fi
 	# Install/update packages
 	apt-get install -y software-properties-common
