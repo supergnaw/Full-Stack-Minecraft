@@ -37,7 +37,7 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 	touch /var/log/overviewer/test.txt
 	touch /var/log/overviewer/update.log
 	touch /var/log/overviewer/rebuild.log
-	chmod -R overviewer:overviewer /var/log/overviewer
+	chown -R overviewer:overviewer /var/log/overviewer
 	chmod -R 755 /var/log/overviewer
 else
 	# Make sure the script is being ran as overviewer user
