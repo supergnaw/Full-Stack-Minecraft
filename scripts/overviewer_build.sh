@@ -9,7 +9,12 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 	if [ ! $@ ]; then
 		echo "no password provided"
 	else
-		echo "password provided: ${!1}"
+		echo "password provided: ${1}"
+	fi
+	if [ ! ${1} ]; then
+		echo "no password provided"
+	else
+		echo "password provided: ${1}"
 	fi
 	exit
 	if [ 0 == `getent passwd overviewer | wc -l` ]; then
