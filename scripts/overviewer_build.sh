@@ -6,7 +6,7 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 		exit
 	fi
 	# Add overviewer user
-	if [ ! ${!1} ]; then
+	if [ ! $@ ]; then
 		echo "no password provided"
 	else
 		echo "password provided: ${!1}"
