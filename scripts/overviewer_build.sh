@@ -54,8 +54,8 @@ else
 	echo "$(date +"%F %T"): Update check..." | tee -a /var/log/overviewer/update.log
 	# Check for repository updates
 	cd /opt/Minecraft-Overviewer && git fetch
-	UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
-	if [ "" != "${UPDATES}"]; then
+	#UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
+	if [ 0 < `git diff --shortstat origin | cut -d " " -f 2` ]; then
 		# If updates exist, pull then rebuild
 		echo "$(date +"%F %T"): ${UPDATES} found, rebuilding..." | tee -a /var/log/overviewer/update.log
 		git pull
