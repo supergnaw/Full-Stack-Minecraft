@@ -6,7 +6,7 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 		exit
 	fi
 	# Add overviewer user
-	if [ 0 == "$( getent passwd overviewer` | wc -l )" ]; then
+	if [ 0 == `getent passwd overviewer` | wc -l` ]; then
 		useradd -m -s /bin/bash overviewer
 		# Generate a random base64 password based on the answer to life, the universe, and everything
 		PASSWORD="$(openssl rand -base64 42)"
@@ -24,7 +24,7 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 	chown -R overviewer:overviewer /opt/Minecraft-Overviewer
 	chmod -R 755 /opt/Minecraft-Overviewer
 	# Create auto-update cron job
-	SCRIPTPATH="$( cd -- "$( dirname "$0" )" >/dev/null 2>&1 ; pwd -P )"
+	SCRIPTPATH=`cd -- "$( dirname "$0" )" >/dev/null 2>&1 ; pwd -P`
 	touch /var/spool/cron/crontabs/overviewer
 	echo "0 5 * * 1 bash ${SCRIPTPATH}/overviewer_build.sh" | tee -a /var/spool/cron/crontabs/overviewer
 	chmod 600 /var/spool/cron/crontabs/overviewer
@@ -37,7 +37,7 @@ else
 	fi
 	# Check for repository updates
 	cd /opt/Minecraft-Overviewer && git fetch
-	UPDATES="$(git diff --shortstat origin | cut -d " " -f 2)"
+	UPDATES=`git diff --shortstat origin | cut -d " " -f 2)`
 	# If updates exist, pull then rebuild
 	if [ "" != "${UPDATES}"]; then
 		git pull
