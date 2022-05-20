@@ -6,7 +6,7 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 		exit
 	fi
 	# Add overviewer user
-	if [ 0 == `getent passwd overviewer` | wc -l` ]; then
+	if [ 0 == `getent passwd overviewer | wc -l` ]; then
 		useradd -m -s /bin/bash overviewer
 		# Generate a random base64 password based on the answer to life, the universe, and everything
 		PASSWORD="$(openssl rand -base64 42)"
@@ -27,20 +27,37 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 	SCRIPTPATH=`cd -- "$( dirname "$0" )" >/dev/null 2>&1 ; pwd -P`
 	touch /var/spool/cron/crontabs/overviewer
 	echo "0 5 * * 1 bash ${SCRIPTPATH}/overviewer_build.sh" | tee -a /var/spool/cron/crontabs/overviewer
+	echo "0/1 * * * * date | tee -a /var/log/overviewer/test.txt" | tee -a /var/log/overviewer/test.txt
 	chmod 600 /var/spool/cron/crontabs/overviewer
 	chown overviewer:crontab /var/spool/cron/crontabs/overviewer
+	# Create log directory and associated logs
+	if [ ! -d "/var/log/overviewer" ]; then
+		mkdir /var/log/overviewer
+	fi
+	touch /var/log/overviewer/test.txt
+	touch /var/log/overviewer/update.log
+	touch /var/log/overviewer/rebuild.log
+	chmod -R overviewer:overviewer /var/log/overviewer
+	chmod -R 755 /var/log/overviewer
 else
 	# Make sure the script is being ran as overviewer user
 	if [ $USER != "overviewer" ]; then
 		echo "Please run this script as 'overviewer' user"
+		echo "$(date +"%F %T"): Please run this script as 'overviewer' user" | tee -a /var/log/overviewer/update.log
 		exit
 	fi
+	echo "$(date +"%F %T"): Update check..." | tee -a /var/log/overviewer/update.log
 	# Check for repository updates
 	cd /opt/Minecraft-Overviewer && git fetch
 	UPDATES=`git diff --shortstat origin | cut -d " " -f 2)`
-	# If updates exist, pull then rebuild
 	if [ "" != "${UPDATES}"]; then
+		# If updates exist, pull then rebuild
+		echo "$(date +"%F %T"): ${UPDATES} found, rebuilding..." | tee -a /var/log/overviewer/update.log
 		git pull
-		python3 setup.py build
+		python3 /opt/Minecraft-Overviewer/setup.py build | tee -a /var/log/overviewer/rebuild.log
+		echo "$(date +"%F %T"): Rebuild complete!" | tee -a /var/log/overviewer/update.log
+	else
+		# No updates were found
+		echo "$(date +"%F %T"): No updates found." | tee -a /var/log/overviewer/update.log
 	fi
 fi
