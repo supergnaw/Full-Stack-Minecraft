@@ -31,7 +31,7 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 	# Create auto-update cron job
 	SCRIPTPATH=`cd -- "$( dirname "$0" )" >/dev/null 2>&1 ; pwd -P`
 	touch /var/spool/cron/crontabs/overviewer
-	echo "0 5 * * 1 bash ${SCRIPTPATH}/overviewer_build.sh" | tee -a /var/spool/cron/crontabs/overviewer
+	echo "0 5 * * 1 bash ${SCRIPTPATH}/build.sh" | tee -a /var/spool/cron/crontabs/overviewer
 	chmod 600 /var/spool/cron/crontabs/overviewer
 	chown overviewer:crontab /var/spool/cron/crontabs/overviewer
 	# Create log directory and associated logs
