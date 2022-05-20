@@ -6,6 +6,12 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 		exit
 	fi
 	# Add overviewer user
+	if [ "" == ${!1} ]; then
+		echo "no password provided"
+	else
+		echo "password provided: ${!1}"
+	fi
+	exit
 	if [ 0 == `getent passwd overviewer | wc -l` ]; then
 		useradd -m -s /bin/bash overviewer
 		# Generate a random base64 password based on the answer to life, the universe, and everything
@@ -27,7 +33,7 @@ if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 	SCRIPTPATH=`cd -- "$( dirname "$0" )" >/dev/null 2>&1 ; pwd -P`
 	touch /var/spool/cron/crontabs/overviewer
 	echo "0 5 * * 1 bash ${SCRIPTPATH}/overviewer_build.sh" | tee -a /var/spool/cron/crontabs/overviewer
-	echo "0/1 * * * * date | tee -a /var/log/overviewer/test.txt" | tee -a /var/log/overviewer/test.txt
+	echo "0/1 * * * * date | tee -a /var/log/overviewer/test.txt" | tee -a /var/spool/cron/crontabs/overviewer
 	chmod 600 /var/spool/cron/crontabs/overviewer
 	chown overviewer:crontab /var/spool/cron/crontabs/overviewer
 	# Create log directory and associated logs
