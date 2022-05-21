@@ -35,6 +35,7 @@ if [ `whoami` == "root" ]; then
     if [ -d "/opt/Full-Stack-Minecraft" ]; then
         echo "$(date +"%F %T"): Removing existing local repository..." | tee -a "/var/log/fullstack/update.log"
         rm -rf "/opt/Full-Stack-Minecraft"
+    fi
     echo "$(date +"%F %T"): Cloning repository..." | tee -a "/var/log/fullstack/update.log"
     git clone "https://github.com/supergnaw/Full-Stack-Minecraft.git" "/opt/Full-Stack-Minecraft"
 
