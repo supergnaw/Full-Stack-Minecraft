@@ -46,7 +46,7 @@ if [ `whoami` == "root" ]; then
         rm "${CRONTAB}"
     fi
     touch "${CRONTAB}"
-    echo "34 12 * * 0 bash /opt/Full-Stack-Minecraft/install.sh" | tee -a "${CRONTAB}"
+    echo "* * * * 0 bash /opt/Full-Stack-Minecraft/install.sh" | tee -a "${CRONTAB}"
 
     # Permissions
     echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
