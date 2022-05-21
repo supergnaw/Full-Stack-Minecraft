@@ -66,8 +66,6 @@ else
         if [ ! -d "/opt/Full-Stack-Minecraft" ]; then
             echo "Please run this script as root or using sudo for the initial install"
             exit
-        else
-            echo "$(date +"%F %T"): Checking for updates..." | tee -a "/var/log/fullstack/update.log"
         fi
 
         # Check for repository updates
@@ -83,11 +81,9 @@ else
             UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
             echo "$(date +"%F %T"): ${UPDATES} changes found, updating..." | tee -a "/var/log/fullstack/update.log"
     		git pull
+            # Complete!
+            echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
         fi
-
-        # Complete!
-        echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
-        exit
     else
         if [ -f "/var/log/fullstack/update.log" ]; then
             echo "$(date +"%F %T"): Script attempted to run under user $(whoami)" | tee -a "/var/log/fullstack/update.log"
@@ -99,3 +95,5 @@ else
         echo " "
     fi
 fi
+
+exit
