@@ -38,6 +38,7 @@ if [ `whoami` == "root" ]; then
     fi
     echo "$(date +"%F %T"): Cloning repository..." | tee -a "/var/log/fullstack/update.log"
     git clone "https://github.com/supergnaw/Full-Stack-Minecraft.git" "/opt/Full-Stack-Minecraft"
+    git config core.fileMode false
 
     # Permissions
     echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
@@ -83,6 +84,7 @@ else
         fi
 
         # Complete!
+        echo "$(date +"%F %T"): ${UPDATES} Complete!" | tee -a "/var/log/fullstack/update.log"
         exit
     fi
 fi
