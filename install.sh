@@ -38,7 +38,6 @@ if [ `whoami` == "root" ]; then
     fi
     echo "$(date +"%F %T"): Cloning repository..." | tee -a "/var/log/fullstack/update.log"
     git clone "https://github.com/supergnaw/Full-Stack-Minecraft.git" "/opt/Full-Stack-Minecraft"
-    git config core.fileMode false
 
     # Permissions
     echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
@@ -71,6 +70,7 @@ else
 
         # Check for repository updates
         cd "/opt/Full-Stack-Minecraft"
+        git config core.fileMode false
         git fetch
         UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
         [[ $UPDATES =~ '([1-9]+|[1-9][0-9]+)' ]]
