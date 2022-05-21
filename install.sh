@@ -90,7 +90,7 @@ else
         exit
     else
         if [ -f "/var/log/fullstack/update.log" ]; then
-            echo "$(date +"%F %T"): script ran under user ${USER}" | tee -a "/var/log/fullstack/update.log"
+            echo "$(date +"%F %T"): script ran under user $(whoami)" | tee -a "/var/log/fullstack/update.log"
         else
             echo " "
             echo "=== Full-Stack Minecraft V1 ==="
