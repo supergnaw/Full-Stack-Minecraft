@@ -1,9 +1,4 @@
-if [ `whoai` == "root" ]; then
-    if [ `whoai` == "root" ]; then
-        echo "Please run this script as root or using sudo for the initial install"
-        exit
-    fi
-
+if [ `whoami` == "root" ]; then
     # Check for fullstack user
     if [ 0 == `getent passwd fullstack | wc -l` ]; then
         # Check if fullstack user password was provided
@@ -82,4 +77,8 @@ else
     fi
 fi
 
+echo " "
+echo "=== Full-Stack Minecraft V1 ==="
+echo " "
 echo "Please run this script as root for the initial install or to repair an existing install, or as user fullstack to check for updates."
+echo " "
