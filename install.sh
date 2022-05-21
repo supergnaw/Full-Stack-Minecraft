@@ -32,7 +32,7 @@ if [ `whoami` == "root" ]; then
 	if [ ! -d "/var/log/fullstack" ]; then
 		mkdir "/var/log/fullstack"
 	fi
-    touch "/var/log/fullstack/install.log"
+    touch "/var/log/fullstack/update.log"
 
     # Permissions
     chown -R fullstack:fullstack "/opt/Full-Stack-Minecraft"
