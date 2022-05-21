@@ -62,7 +62,7 @@ if [ `whoami` == "root" ]; then
     exit
 else
     if [ `whoami` == "fullstack" ]; then
-        # Account check
+        # Repository check
         if [ ! -d "/opt/Full-Stack-Minecraft" ]; then
             echo "Please run this script as root or using sudo for the initial install"
             exit
@@ -73,10 +73,7 @@ else
         git config core.fileMode false
         git fetch
         UPDATES=`git diff --shortstat origin/main | wc -l`
-        if [[ 0 -eq ${UPDATES} ]]; then
-            # No updates were found
-            echo "$(date +"%F %T"): No changes found, no updates required." | tee -a "/var/log/fullstack/update.log"
-        else
+        if [[ 0 -ne ${UPDATES} ]]; then
             # If updates exist, pull them
             UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
             echo "$(date +"%F %T"): ${UPDATES} changes found, updating..." | tee -a "/var/log/fullstack/update.log"
