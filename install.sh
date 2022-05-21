@@ -74,7 +74,7 @@ else
         git fetch
         UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
         [[ $UPDATES =~ '([1-9]+|[1-9][0-9]+)' ]]
-        if [ $UPDATES == $BASH_REMATCH[1] ]; then
+        if [ $UPDATES -eq $BASH_REMATCH[1] ]; then
             # If updates exist, pull them
             echo "$(date +"%F %T"): ${UPDATES} found, updating..." | tee -a "/var/log/fullstack/update.log"
     		git pull
