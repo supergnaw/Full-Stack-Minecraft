@@ -32,13 +32,11 @@ if [ `whoami` == "root" ]; then
     fi
 
     # Clone the repository
-    if [ ! -d "/opt/Full-Stack-Minecraft" ]; then
-        echo "$(date +"%F %T"): Cloning repository..." | tee -a "/var/log/fullstack/update.log"
-        git clone https://github.com/supergnaw/Full-Stack-Minecraft.git /opt/Full-Stack-Minecraft
-    else
-        echo "$(date +"%F %T"): Updating repository..." | tee -a "/var/log/fullstack/update.log"
-        git pull
-    fi
+    if [ -d "/opt/Full-Stack-Minecraft" ]; then
+        echo "$(date +"%F %T"): Removing existing local repository..." | tee -a "/var/log/fullstack/update.log"
+        rm -rf "/opt/Full-Stack-Minecraft"
+    echo "$(date +"%F %T"): Cloning repository..." | tee -a "/var/log/fullstack/update.log"
+    git clone "https://github.com/supergnaw/Full-Stack-Minecraft.git" "/opt/Full-Stack-Minecraft"
 
     # Permissions
     echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
