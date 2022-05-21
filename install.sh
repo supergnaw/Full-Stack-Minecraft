@@ -75,15 +75,16 @@ else
         UPDATES=`git diff --shortstat origin/main | wc -l`
         if [[ 0 -eq ${UPDATES} ]]; then
             # No updates were found
-            echo "$(date +"%F %T"): ${UPDATES} changes found, no updates required." | tee -a "/var/log/fullstack/update.log"
+            echo "$(date +"%F %T"): no changes found, no updates required." | tee -a "/var/log/fullstack/update.log"
         else
             # If updates exist, pull them
+            UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
             echo "$(date +"%F %T"): ${UPDATES} changes found, updating..." | tee -a "/var/log/fullstack/update.log"
     		git pull
         fi
 
         # Complete!
-        echo "$(date +"%F %T"): ${UPDATES} Complete!" | tee -a "/var/log/fullstack/update.log"
+        echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
         exit
     fi
 fi
