@@ -46,7 +46,7 @@ if [ `whoami` == "root" ]; then
         rm "${CRONTAB}"
     fi
     touch "${CRONTAB}"
-    echo "5 * * * * bash /opt/Full-Stack-Minecraft/install.sh" | tee -a "${CRONTAB}"
+    echo "34 12 * * 0 bash /opt/Full-Stack-Minecraft/install.sh" | tee -a "${CRONTAB}"
 
     # Permissions
     echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
@@ -91,12 +91,11 @@ else
     else
         if [ -f "/var/log/fullstack/update.log" ]; then
             echo "$(date +"%F %T"): Script attempted to run under user $(whoami)" | tee -a "/var/log/fullstack/update.log"
-        else
-            echo " "
-            echo "=== Full-Stack Minecraft V1 ==="
-            echo " "
-            echo "Please run this script as root for the initial install or to repair an existing install, or as user fullstack to check for updates."
-            echo " "
         fi
+        echo " "
+        echo "=== Full-Stack Minecraft V1 ==="
+        echo " "
+        echo "Please run this script as root for the initial install or to repair an existing install, or as user fullstack to check for updates."
+        echo " "
     fi
 fi
