@@ -72,12 +72,12 @@ else
         cd "/opt/Full-Stack-Minecraft"
         git config core.fileMode false
         git fetch
-        if [[ 0 -eq `git diff --shortstat origin | wc -l` ]]; then
+        if [[ 0 -eq `git diff --shortstat origin/main | wc -l` ]]; then
             # No updates were found
-            echo "$(date +"%F %T"): ${UPDATES} found." | tee -a "/var/log/fullstack/update.log"
+            echo "$(date +"%F %T"): ${UPDATES} changes found, no updates required." | tee -a "/var/log/fullstack/update.log"
         else
             # If updates exist, pull them
-            echo "$(date +"%F %T"): ${UPDATES} found, updating..." | tee -a "/var/log/fullstack/update.log"
+            echo "$(date +"%F %T"): ${UPDATES} changes found, updating..." | tee -a "/var/log/fullstack/update.log"
     		git pull
         fi
 
