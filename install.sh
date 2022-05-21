@@ -61,7 +61,7 @@ if [ `whoami` == "root" ]; then
     echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
     exit
 else
-    if [ $USER == "fullstack" ]; then
+    if [ `whoami` == "fullstack" ]; then
         # Account check
         if [ ! -d "/opt/Full-Stack-Minecraft" ]; then
             echo "Please run this script as root or using sudo for the initial install"
@@ -77,7 +77,7 @@ else
         UPDATES=`git diff --shortstat origin/main | wc -l`
         if [[ 0 -eq ${UPDATES} ]]; then
             # No updates were found
-            echo "$(date +"%F %T"): no changes found, no updates required." | tee -a "/var/log/fullstack/update.log"
+            echo "$(date +"%F %T"): No changes found, no updates required." | tee -a "/var/log/fullstack/update.log"
         else
             # If updates exist, pull them
             UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
@@ -90,7 +90,7 @@ else
         exit
     else
         if [ -f "/var/log/fullstack/update.log" ]; then
-            echo "$(date +"%F %T"): script ran under user $(whoami)" | tee -a "/var/log/fullstack/update.log"
+            echo "$(date +"%F %T"): Script attempted to run under user $(whoami)" | tee -a "/var/log/fullstack/update.log"
         else
             echo " "
             echo "=== Full-Stack Minecraft V1 ==="
