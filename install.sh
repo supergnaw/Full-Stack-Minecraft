@@ -39,13 +39,6 @@ if [ `whoami` == "root" ]; then
     echo "$(date +"%F %T"): Cloning repository..." | tee -a "/var/log/fullstack/update.log"
     git clone "https://github.com/supergnaw/Full-Stack-Minecraft.git" "/opt/Full-Stack-Minecraft"
 
-    # Permissions
-    echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
-    chown -R fullstack:fullstack "/opt/Full-Stack-Minecraft"
-    chmod -R 755 "/opt/Full-Stack-Minecraft"
-    chown -R fullstack:fullstack "/var/log/fullstack/update.log"
-    chmod -R 755 "/var/log/fullstack/update.log"
-
     # Create cron job for automatic updates
     echo "$(date +"%F %T"): Creating automatic updates cron job..." | tee -a "/var/log/fullstack/update.log"
     CRONTAB=/var/spool/cron/crontabs/fullstack
@@ -54,6 +47,13 @@ if [ `whoami` == "root" ]; then
     fi
     touch "${CRONTAB}"
     echo "5 * * * * bash /opt/Full-Stack-Minecraft/install.sh" | tee -a "${CRONTAB}"
+
+    # Permissions
+    echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
+    chown -R fullstack:fullstack "/opt/Full-Stack-Minecraft"
+    chmod -R 755 "/opt/Full-Stack-Minecraft"
+    chown -R fullstack:fullstack "/var/log/fullstack"
+    chmod -R 755 "/var/log/fullstack"
     chmod 600 "${CRONTAB}"
     chown fullstack:fullstack "${CRONTAB}"
 
@@ -66,6 +66,8 @@ else
         if [ ! -d "/opt/Full-Stack-Minecraft" ]; then
             echo "Please run this script as root or using sudo for the initial install"
             exit
+        else
+            echo "$(date +"%F %T"): Checking for updates..." | tee -a "/var/log/fullstack/update.log"
         fi
 
         # Check for repository updates
@@ -86,11 +88,15 @@ else
         # Complete!
         echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
         exit
+    else
+        if [ -f "/var/log/fullstack/update.log" ]; then
+            echo "$(date +"%F %T"): script ran under user ${USER}" | tee -a "/var/log/fullstack/update.log"
+        else
+            echo " "
+            echo "=== Full-Stack Minecraft V1 ==="
+            echo " "
+            echo "Please run this script as root for the initial install or to repair an existing install, or as user fullstack to check for updates."
+            echo " "
+        fi
     fi
 fi
-
-echo " "
-echo "=== Full-Stack Minecraft V1 ==="
-echo " "
-echo "Please run this script as root for the initial install or to repair an existing install, or as user fullstack to check for updates."
-echo " "
