@@ -34,6 +34,10 @@ if [ `whoami` == root ]; then
 	apt-get install -y python3-pil python3-dev python3-numpy
 
 	# Clone the repository
+    if [ -d "/opt/Minecraft-Overviewer" ]; then
+        echo "$(date +"%F %T"): Removing existing local repository..." | tee -a "/var/log/fullstack/update.log"
+        rm -rf "/opt/Minecraft-Overviewer"
+    fi
 	echo "$(date +"%F %T"): Cloning Minecraft-Overviewer repository..." | tee -a "/var/log/overviewer/update.log"
 	git clone "https://github.com/overviewer/Minecraft-Overviewer.git" "/opt/Minecraft-Overviewer"
 	wget -O "/opt/Minecraft-Overviewer/textures/${SERVER_VERSION}.jar" "https://overviewer.org/textures/${SERVER_VERSION}"
