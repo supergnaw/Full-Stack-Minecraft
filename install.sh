@@ -76,6 +76,9 @@ else
 
             # Complete!
             echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
+        else
+			# No updates were found
+            echo "$(date +"%F %T"): No updates found." | tee -a "/var/log/fullstack/update.log"
         fi
     else
         if [ -f "/var/log/fullstack/update.log" ]; then
