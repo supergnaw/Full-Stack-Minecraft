@@ -51,7 +51,7 @@ if [ `whoami` == "root" ]; then
 
     # Install Mincraft Overviewer
     cd "/opt/Full-Stack-Minecraft"
-    bash "/overviewer/build.sh"
+    bash "./overviewer/build.sh"
 
     # Complete!
     echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
