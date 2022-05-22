@@ -21,7 +21,7 @@ if [ `whoami` == root ]; then
 
 	# Set overviewer user account password
 	if [ ! ${1} ]; then
-		read -sp "Please provide a password for the overviewer user account:" PASSWORD
+		read -sp "Please provide a password for the overviewer user account:" PASSWORD < /dev/tty
 	else
 		PASSWORD=${1}
 	fi
@@ -35,15 +35,13 @@ if [ `whoami` == root ]; then
 
 	# Clone the repository
 	echo "$(date +"%F %T"): Cloning Minecraft-Overviewer repository..." | tee -a "/var/log/overviewer/update.log"
-	mkdir "/opt/Minecraft-Overviewer"
-	cd "/opt/Minecraft-Overviewer"
 	git clone "https://github.com/overviewer/Minecraft-Overviewer.git" "/opt/Minecraft-Overviewer"
 	wget -O "/opt/Minecraft-Overviewer/textures/${SERVER_VERSION}.jar" "https://overviewer.org/textures/${SERVER_VERSION}"
 
 	# Build overviewer
 	cd "/opt/Minecraft-Overviewer"
 	echo "$(date +"%F %T"): Building overviewer..." | tee -a "/var/log/overviewer/update.log"
-	python3 setup.py build | tee -a "/varlog/overviewer/build.log"
+	python3 setup.py build | tee -a "/var/log/overviewer/build.log"
 
 	# Create cron job for automatic updates
 	echo "$(date +"%F %T"): Creating automatic updates cron job..." | tee -a "/var/log/overviewer/update.log"
