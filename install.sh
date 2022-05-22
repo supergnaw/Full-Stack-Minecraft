@@ -29,8 +29,6 @@ if [ `whoami` == "root" ]; then
         rm -rf "/opt/Full-Stack-Minecraft"
     fi
     echo "$(date +"%F %T"): Cloning Full-Stack-Minecraft repository..." | tee -a "/var/log/fullstack/update.log"
-    mkdir "/opt/Full-Stack-Minecraft"
-    cd "/opt/Full-Stack-Minecraft"
     git clone "https://github.com/supergnaw/Full-Stack-Minecraft.git" "/opt/Full-Stack-Minecraft"
 
     # Create cron job for automatic updates
