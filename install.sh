@@ -55,7 +55,6 @@ if [ `whoami` == "root" ]; then
 
     # Complete!
     echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
-    exit
 else
     if [ `whoami` == "fullstack" ]; then
         # Repository check
@@ -89,5 +88,3 @@ else
         echo " "
     fi
 fi
-
-exit
