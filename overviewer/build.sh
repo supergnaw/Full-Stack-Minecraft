@@ -67,7 +67,6 @@ if [ `whoami` == root ]; then
 
 	# Complete!
 	echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/overviewer/update.log"
-	exit
 else
 	# Make sure the script is being ran as overviewer user
 	if [ `whoami` == "overviewer" ]; then
@@ -109,5 +108,3 @@ else
 		echo " "
 	fi
 fi
-
-exit
