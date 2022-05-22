@@ -8,35 +8,27 @@ if [ `whoami` == "root" ]; then
         echo "$(date +"%F %T"): Repairing Full-Stack-Minecraft install..." | tee -a "/var/log/fullstack/update.log"
     fi
 
-    # Create new user account fullstack
+    # Check for fullstack user
     if [ 0 == `getent passwd fullstack | wc -l` ]; then
+        # Add fullstack user
         echo "$(date +"%F %T"): Creating new user account: fullstack" | tee -a "/var/log/fullstack/update.log"
-        # Check if fullstack user password was provided
-        if [ ! ${1} ]; then
-            echo "Please provide a password for new user account: fullstack"
-            echo "$(date +"%F %T"): No password provided for new user account exiting." | tee -a "/var/log/fullstack/update.log"
-            exit
-        else
-            # Add fullstack user
-            useradd -m -s /bin/bash fullstack
-
-            # Set fullstack user password
-            echo "fullstack:${1}" | chpasswd
-        fi
+        useradd -m -s /bin/bash fullstack
     fi
 
-    # Update user account fullstack password
-    if [ ${1} ]; then
-        echo "$(date +"%F %T"): Updating fullstack user account password." | tee -a "/var/log/fullstack/update.log"
-        echo "fullstack:${1}" | chpasswd
+    # Set fullstack user account password
+    if [ ! ${1} ]; then
+        read -sp "Please provide a password for the fullstack user account:" PASSWORD
+    else
+        PASSWORD=${1}
     fi
+    echo "fullstack:${1}" | chpasswd
 
     # Clone the repository
     if [ -d "/opt/Full-Stack-Minecraft" ]; then
         echo "$(date +"%F %T"): Removing existing local repository..." | tee -a "/var/log/fullstack/update.log"
         rm -rf "/opt/Full-Stack-Minecraft"
     fi
-    echo "$(date +"%F %T"): Cloning repository..." | tee -a "/var/log/fullstack/update.log"
+    echo "$(date +"%F %T"): Cloning Full-Stack-Minecraft repository..." | tee -a "/var/log/fullstack/update.log"
     git clone "https://github.com/supergnaw/Full-Stack-Minecraft.git" "/opt/Full-Stack-Minecraft"
 
     # Create cron job for automatic updates
@@ -46,7 +38,7 @@ if [ `whoami` == "root" ]; then
         rm "${CRONTAB}"
     fi
     touch "${CRONTAB}"
-    echo "* */1 * * * bash /opt/Full-Stack-Minecraft/install.sh" | tee -a "${CRONTAB}"
+    echo "* * * * * bash /opt/Full-Stack-Minecraft/install.sh" | tee -a "${CRONTAB}"
 
     # Permissions
     echo "$(date +"%F %T"): Updating permissions..." | tee -a "/var/log/fullstack/update.log"
@@ -55,7 +47,7 @@ if [ `whoami` == "root" ]; then
     chown -R fullstack:fullstack "/var/log/fullstack"
     chmod -R 755 "/var/log/fullstack"
     chmod 600 "${CRONTAB}"
-    chown fullstack:fullstack "${CRONTAB}"
+    chown fullstack:crontab "${CRONTAB}"
 
     # Complete!
     echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
@@ -78,6 +70,7 @@ else
             UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
             echo "$(date +"%F %T"): ${UPDATES} changes found, updating..." | tee -a "/var/log/fullstack/update.log"
     		git pull
+            
             # Complete!
             echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
         fi
