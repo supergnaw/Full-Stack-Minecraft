@@ -17,7 +17,7 @@ if [ `whoami` == "root" ]; then
 
     # Set fullstack user account password
     if [ ! ${1} ]; then
-        read -sp "Please provide a password for the fullstack user account:" PASSWORD
+        read -sp "Please provide a password for the fullstack user account:" PASSWORD < /dev/tty
     else
         PASSWORD=${1}
     fi
