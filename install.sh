@@ -49,6 +49,10 @@ if [ `whoami` == "root" ]; then
     chmod 600 "${CRONTAB}"
     chown fullstack:crontab "${CRONTAB}"
 
+    # Install Mincraft Overviewer
+    cd "/opt/Full-Stack-Minecraft"
+    bash "/overviewer/build.sh"
+
     # Complete!
     echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
     exit
@@ -70,7 +74,7 @@ else
             UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
             echo "$(date +"%F %T"): ${UPDATES} changes found, updating..." | tee -a "/var/log/fullstack/update.log"
     		git pull
-            
+
             # Complete!
             echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
         fi
