@@ -54,7 +54,7 @@ if [ `whoami` == root ]; then
 		rm "${CRONTAB}"
 	fi
 	touch "${CRONTAB}"
-	echo "* * * * * bash /build.sh" | tee -a "${CRONTAB}"
+	echo "* * * * * bash /opt/Full-Stack-Minecraft/overviewer/build.sh" | tee -a "${CRONTAB}"
 
 	# Set permissions
 	echo "$(date +"%F %T"): Updating permissions" | tee -a "/var/log/overviewer/update.log"
