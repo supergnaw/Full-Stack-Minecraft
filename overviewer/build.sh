@@ -56,8 +56,8 @@ if [ `whoami` == root ]; then
 	echo "$(date +"%F %T"): Updating permissions" | tee -a "/var/log/overviewer/update.log"
 	chown -R overviewer:overviewer "/var/log/overviewer"
 	chmod -R 755 "/var/log/overviewer"
-	chown -R overviewer:overviewer "/opt/Minecrft-Overviewer"
-	chmod -R 755 "/opt/Minecrft-Overviewer"
+	chown -R overviewer:overviewer "/opt/Minecarft-Overviewer"
+	chmod -R 755 "/opt/Minecarft-Overviewer"
 	chmod 600 "/var/spool/cron/crontabs/overviewer"
 	chown overviewer:crontab "/var/spool/cron/crontabs/overviewer"
 
