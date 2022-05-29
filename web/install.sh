@@ -35,13 +35,16 @@ while true; do
 	fi
 done
 
+# Install Aptitude
+apt-get install -y aptitude
+
 # Install Apache
-apt install -y apache2
+aptitude install -y apache2
 systemctl enable apache2
 systemctl restart apache2
 
 # Install Database Server
-apt install -y mariadb-server mariadb-client
+aptitude install -y mariadb-server mariadb-client
 systemctl enable mariadb
 systemctl restart mariadb
 
@@ -59,7 +62,7 @@ mysql -u $user -p"${MYSQL_DATABASE_PASS}" -e "ALTER USER '${PHPMYADMIN_ROOT}'@'l
 mysql -u $user -p"${MYSQL_DATABASE_PASS}" -e "GRANT ALL PRIVILEGES ON *.* TO '${PHPMYADMIN_ROOT}'@'localhost' WITH GRANT OPTION;"
 
 # Install PHP and various modules
-apt install -y php libapache2-mod-php php-mysql phpmyadmin php-mbstring php-zip php-gd php-json php-curl
+aptitude install -y php libapache2-mod-php php-mysql phpmyadmin php-mbstring php-zip php-gd php-json php-curl
 
 # Secure phpMyAdmin portal page
 sed '/^\s*DirectoryIndex.*/a \tAllowOverride All' /etc/apache2/conf-available/phpmyadmin.conf > /etc/apache2/conf-available/phpmyadmin.conf.bak
