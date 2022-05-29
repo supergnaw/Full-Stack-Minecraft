@@ -1,7 +1,5 @@
 # Stop Minecraft server
-USERNAME=`whoami`
-
-if screen -ls | grep -Pq "[\d]+\.${WHOAMI}"; then
-	screen -S ${WHOAMI} -X stuff "stop^M"
+if [ screen -ls | grep -Pq "[\d]+\.$(whoami)_server" ]; then
+	screen -S "$(whoami)_server" -X stuff "stop^M"
 	sleep 5
 fi
