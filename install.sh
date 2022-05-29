@@ -18,7 +18,7 @@ if [ `whoami` == "root" ]; then
 	# Set fullstack user account password
 	if [ ! ${1} ]; then
 		read -sp "Please provide a password for the fullstack user account:" PASSWORD < /dev/tty
-		echo "fullstack:${1}" | chpasswd
+		echo "fullstack:${PASSWORD}" | chpasswd
 	else
 		PASSWORD=${1}
 		if [ ${PASSWORD} ]; then
@@ -54,12 +54,16 @@ if [ `whoami` == "root" ]; then
 	chmod 600 "${CRONTAB}"
 	chown fullstack:crontab "${CRONTAB}"
 
+	# Install PaperMC
+	cd "/opt/Full-Stack-Minecraft"
+	bash "./papermc/build.sh"
+
 	# Install Mincraft Overviewer
 	cd "/opt/Full-Stack-Minecraft"
 	bash "./overviewer/build.sh"
 
 	# Complete!
-	echo "$(date +"%F %T"): Full-Stack Minecraft install omplete!" | tee -a "/var/log/fullstack/update.log"
+	echo "$(date +"%F %T"): Full-Stack Minecraft install complete!" | tee -a "/var/log/fullstack/update.log"
 else
 	if [ `whoami` == "fullstack" ]; then
 		# Repository check
@@ -77,6 +81,7 @@ else
 			# If updates exist, pull them
 			UPDATES=`git diff --shortstat origin | cut -d " " -f 2`
 			echo "$(date +"%F %T"): ${UPDATES} changes found, updating..." | tee -a "/var/log/fullstack/update.log"
+			git reset --hard
 			git pull
 
 			# Complete!
