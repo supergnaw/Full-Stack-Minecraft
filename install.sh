@@ -18,10 +18,13 @@ if [ `whoami` == "root" ]; then
     # Set fullstack user account password
     if [ ! ${1} ]; then
         read -sp "Please provide a password for the fullstack user account:" PASSWORD < /dev/tty
+        echo "fullstack:${1}" | chpasswd
     else
         PASSWORD=${1}
+        if [ ${PASSWORD} ]; then
+            echo "fullstack:${PASSWORD}" | chpasswd
+        fi
     fi
-    echo "fullstack:${1}" | chpasswd
 
     # Clone the repository
     if [ -d "/opt/Full-Stack-Minecraft" ]; then
@@ -54,7 +57,7 @@ if [ `whoami` == "root" ]; then
     bash "./overviewer/build.sh"
 
     # Complete!
-    echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/fullstack/update.log"
+    echo "$(date +"%F %T"): Full-Stack Minecraft install omplete!" | tee -a "/var/log/fullstack/update.log"
 else
     if [ `whoami` == "fullstack" ]; then
         # Repository check
