@@ -22,10 +22,13 @@ if [ `whoami` == root ]; then
 	# Set overviewer user account password
 	if [ ! ${1} ]; then
 		read -sp "Please provide a password for the overviewer user account:" PASSWORD < /dev/tty
+		echo "overviewer:${PASSWORD}" | chpasswd
 	else
 		PASSWORD=${1}
+		if [ ${PASSWORD} ]; then
+			echo "overviewer:${PASSWORD}" | chpasswd
+		fi
 	fi
-	echo "overviewer:${PASSWORD}" | chpasswd
 
 	# Install/update packages
 	echo "$(date +"%F %T"): Updating python and packages..." | tee -a "/var/log/overviewer/update.log"
@@ -66,7 +69,7 @@ if [ `whoami` == root ]; then
 	chown overviewer:crontab "/var/spool/cron/crontabs/overviewer"
 
 	# Complete!
-	echo "$(date +"%F %T"): Complete!" | tee -a "/var/log/overviewer/update.log"
+	echo "$(date +"%F %T"): Overviewer build complete!" | tee -a "/var/log/overviewer/update.log"
 else
 	# Make sure the script is being ran as overviewer user
 	if [ `whoami` == "overviewer" ]; then
