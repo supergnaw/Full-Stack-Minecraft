@@ -74,7 +74,7 @@ else
 	# Make sure the script is being ran as overviewer user
 	if [ `whoami` == "overviewer" ]; then
 		# Repository check
-		if [ -d "/opt/Minecraft-Overviewer" ]; then
+		if [ ! -d "/opt/Minecraft-Overviewer" ]; then
 			echo "Please run this script as root or using sudo for the initial install"
 			exit
 		fi
