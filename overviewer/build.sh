@@ -37,10 +37,10 @@ if [ `whoami` == root ]; then
 	apt-get install -y python3-pil python3-dev python3-numpy
 
 	# Clone the repository
-    if [ -d "/opt/Minecraft-Overviewer" ]; then
-        echo "$(date +"%F %T"): Removing existing local repository..." | tee -a "/var/log/fullstack/update.log"
-        rm -rf "/opt/Minecraft-Overviewer"
-    fi
+	if [ -d "/opt/Minecraft-Overviewer" ]; then
+		echo "$(date +"%F %T"): Removing existing local repository..." | tee -a "/var/log/fullstack/update.log"
+		rm -rf "/opt/Minecraft-Overviewer"
+	fi
 	echo "$(date +"%F %T"): Cloning Minecraft-Overviewer repository..." | tee -a "/var/log/overviewer/update.log"
 	git clone "https://github.com/overviewer/Minecraft-Overviewer.git" "/opt/Minecraft-Overviewer"
 	wget -O "/opt/Minecraft-Overviewer/textures/${SERVER_VERSION}.jar" "https://overviewer.org/textures/${SERVER_VERSION}"
@@ -52,12 +52,14 @@ if [ `whoami` == root ]; then
 
 	# Create cron job for automatic updates
 	echo "$(date +"%F %T"): Creating automatic updates cron job..." | tee -a "/var/log/overviewer/update.log"
-	CRONTAB=/var/spool/cron/crontabs/overviewer
+	CRONTAB="/var/spool/cron/crontabs/overviewer"
 	if [[ -f "${CRONTAB}" ]]; then
 		rm "${CRONTAB}"
 	fi
 	touch "${CRONTAB}"
-	echo "* * * * * bash /opt/Full-Stack-Minecraft/overviewer/build.sh" | tee -a "${CRONTAB}"
+	HOURS=$(( $RANDOM % 24 )) # Randomize time for whatever reason
+	MINUTES=$(( $RANDOM % 60 ))
+	echo "${MINUTES} ${HOURS} * * * bash /opt/Full-Stack-Minecraft/overviewer/build.sh" | tee -a "${CRONTAB}"
 
 	# Set permissions
 	echo "$(date +"%F %T"): Updating permissions" | tee -a "/var/log/overviewer/update.log"
