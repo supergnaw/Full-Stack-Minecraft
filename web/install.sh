@@ -1,33 +1,37 @@
 # Install LAMP
-if [ `whoami` -ne root ]; then
+if [ `whoami` -ne "root" ]; then
 	echo "Please run this script as root or using sudo for the initial install"
 	exit
 fi
 
 while true; do
 	read -sp "MySQL Database Password (at least 8 characters long):" MYSQL_DATABASE_PASS
-	if [ 7 < `expr length ${MYSQL_DATABASE_PASS}` ]; then
-		break
+	if [[ `expr length ${MYSQL_DATABASE_PASS}` > 7 ]]; then
+		echo " " && break
+	else
+		echo "Invalid length for password: $(expr length ${MYSQL_DATABASE_PASS})"
 	fi
 done
 
 while true; do
 	read -p "Enter username for phpMyAdmin root user:" PHPMYADMIN_ROOT
 
-	if [ 0 -eq `getent passwd ${PHPMYADMIN_ROOT} | wc -l` ]; then
+	if [[ 0 -eq `getent passwd ${PHPMYADMIN_ROOT} | wc -l` ]]; then
 		echo "Invalid username provided. Your options are:"
 		echo " "
 		getent passwd | grep -P "^\w+:\w+:\d{4,}:" | cut -d ":" -f 1
 		echo " "
 	else
-		break
+		echo " " && break
 	fi
 done
 
 while true; do
 	read -sp "Enter password for phpMyAdmin root user (at least 8 characters long):" PHPMYADMIN_PASS
-	if [ 7 < `expr length ${PHPMYADMIN_PASS}` ]; then
-		break
+	if [[ `expr length ${PHPMYADMIN_PASS}` > 7 ]]; then
+		echo " " && break
+	else
+		echo "Invalid length for password: $(expr length ${PHPMYADMIN_PASS})"
 	fi
 done
 
@@ -35,9 +39,6 @@ done
 apt install -y apache2
 systemctl enable apache2
 systemctl restart apache2
-
-# Install PHP and various modules
-apt install -y php libapache2-mod-php php-mysql phpmyadmin php-mbstring php-zip php-gd php-json php-curl
 
 # Install Database Server
 apt install -y mariadb-server mariadb-client
@@ -56,6 +57,9 @@ mysql -u root -p"${MYSQL_DATABASE_PASS}" -e "FLUSH PRIVILEGES"
 mysql -u $user -p"${MYSQL_DATABASE_PASS}" -e "CREATE USER '${PHPMYADMIN_ROOT}'@'localhost' IDENTIFIED WITH caching_sha2_password BY '${PHPMYADMIN_PASS}';"
 mysql -u $user -p"${MYSQL_DATABASE_PASS}" -e "ALTER USER '${PHPMYADMIN_ROOT}'@'localhost' IDENTIFIED WITH mysql_native_password BY '${PHPMYADMIN_PASS}';"
 mysql -u $user -p"${MYSQL_DATABASE_PASS}" -e "GRANT ALL PRIVILEGES ON *.* TO '${PHPMYADMIN_ROOT}'@'localhost' WITH GRANT OPTION;"
+
+# Install PHP and various modules
+apt install -y php libapache2-mod-php php-mysql phpmyadmin php-mbstring php-zip php-gd php-json php-curl
 
 # Secure phpMyAdmin portal page
 sed '/^\s*DirectoryIndex.*/a \tAllowOverride All' /etc/apache2/conf-available/phpmyadmin.conf > /etc/apache2/conf-available/phpmyadmin.conf.bak
