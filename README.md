@@ -8,6 +8,6 @@ Automation is the thing that makes the world go round. The goal of this is to cr
 This one-liner should install the Full-Stack-Minecraft thing properly:
 
 ```bash
-wget -O - http://raw.githubusercontent.com/supergnaw/Full-Stack-Minecraft/main/install.sh | sudo bash
+wget -O - https://raw.githubusercontent.com/supergnaw/Full-Stack-Minecraft/main/install.sh | sudo bash
 ```
 
